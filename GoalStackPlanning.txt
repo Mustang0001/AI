@@ -1,0 +1,34 @@
+class BlockWorldPlanner:
+    def __init__(self):
+        self.initial_state = {'A': 'OnTable', 'B': 'OnTable'}
+        self.goal_state = {'A': 'On', 'B': 'A'}
+
+    def move_blocks(self, block, destination):
+        print(f"Move block {block} to {destination}")
+        self.initial_state[block] = destination
+
+    def clear_block(self, block):
+        print(f"Clear block {block}")
+        self.initial_state[block] = 'OnTable'
+
+    def stack_blocks(self, current_state=None):
+        if current_state is None:
+            current_state = self.initial_state.copy()
+
+        if current_state == self.goal_state:
+            print("Goal achieved!")
+            return
+
+        for block, status in self.goal_state.items():
+            if current_state[block] != status:
+                if status == 'OnTable':
+                    self.clear_block(block)
+                else:
+                    destination = status
+                    self.stack_blocks(self.move_blocks(block, destination))
+                    self.move_blocks(block, destination)
+
+# Example usage
+if __name__ == "__main__":
+    planner = BlockWorldPlanner()
+    planner.stack_blocks()
